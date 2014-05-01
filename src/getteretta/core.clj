@@ -1,5 +1,4 @@
-(ns getteretta
-  (:require [clojure.set :as set]))
+(ns getteretta)
 
 (defmacro getter
   "Generate a first class getter"
