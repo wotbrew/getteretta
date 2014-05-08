@@ -40,10 +40,10 @@
   `(mapify** ~type setter ~@setters))
 
 (defn run-setters
-  "Finds the setter in the setter map, applys matching value in opts
-  to a source type.
-  e.g. (run-setters obj {:foo .setFoo} {:foo \"bar\") =>
-        obj with foo set to bar"
+  "for each key/value pair, looks up the setter in the setter-map provided
+   and executes it, passing the source instance, and the value.
+   e.g. (run-setters obj {:foo .setFoo} {:foo \"bar\") =>
+         obj with foo set to bar"
   ([source setter-map opts]
    (doseq [[key val] opts
            :let [setter (setter-map key)]
@@ -54,7 +54,9 @@
    (run-setters source setter-map (conj (partition 2 opts) [key val]))))
 
 (defn setter-ctor
-  "Takes a constructor function and a map of k to setter
-  e.g. (setter-ctor #(String.) {:foo .setFoo})"
+  "Takes a constructor function and a setter-map
+   e.g. (def create-some-obj (setter-ctor #(SomeObj.) {:foo .setFoo}))
+        (create-some-obj :foo 1)
+        =>  an instance of SomeObj with the foo property set to 1."
   [ctor setter-map]
   (fn [& opts] (apply run-setters (ctor) setter-map opts)))
