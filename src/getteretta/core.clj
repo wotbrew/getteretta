@@ -40,7 +40,7 @@
   `(mapify** ~type setter ~@setters))
 
 (defn run-setters
-  "for each key/value pair, looks up the setter in the setter-map provided
+  "For each key/value pair, looks up the setter in the setter-map provided
    and executes it, passing the source instance, and the value.
    e.g. (run-setters obj {:foo .setFoo} {:foo \"bar\") =>
          obj with foo set to bar"
@@ -60,3 +60,13 @@
         =>  an instance of SomeObj with the foo property set to 1."
   [ctor setter-map]
   (fn [& opts] (apply run-setters (ctor) setter-map opts)))
+
+(defn pre-setter
+  "Takes a setter fn and a set of transforms
+   returns a new setter fn that will apply the transforms (as a normal composed fn)
+   to the value before it is passed to the setter."
+  ([setter transform & transforms]
+   (pre-setter setter (apply comp transform transforms)))
+  ([setter transform]
+   (fn [inst val]
+     (setter inst (transform val)))))
