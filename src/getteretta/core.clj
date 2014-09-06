@@ -40,9 +40,10 @@
   `(mapify** ~type setter ~@setters))
 
 (defn run-setters
-  "For each key/value pair, looks up the setter in the setter-map provided
-   and executes it, passing the source instance, and the value.
-   e.g. (run-setters obj {:foo .setFoo} {:foo \"bar\") =>
+  "For each key/value pair in `opts`, looks up the setter in the setter-map provided
+   and executes it, passing the `source` instance, and the value.
+   e.g. (def g (getter-map Foo :foo .setFoo))
+        (run-setters obj g {:foo \"bar\"}) =>
          obj with foo set to bar"
   ([source setter-map opts]
    (doseq [[key val] opts
